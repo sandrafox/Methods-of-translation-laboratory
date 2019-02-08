@@ -21,6 +21,36 @@ public interface ProgramListener extends ParseTreeListener {
 	 */
 	void exitProgram(ProgramParser.ProgramContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ProgramParser#header}.
+	 * @param ctx the parse tree
+	 */
+	void enterHeader(ProgramParser.HeaderContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ProgramParser#header}.
+	 * @param ctx the parse tree
+	 */
+	void exitHeader(ProgramParser.HeaderContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ProgramParser#members}.
+	 * @param ctx the parse tree
+	 */
+	void enterMembers(ProgramParser.MembersContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ProgramParser#members}.
+	 * @param ctx the parse tree
+	 */
+	void exitMembers(ProgramParser.MembersContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ProgramParser#begin}.
+	 * @param ctx the parse tree
+	 */
+	void enterBegin(ProgramParser.BeginContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ProgramParser#begin}.
+	 * @param ctx the parse tree
+	 */
+	void exitBegin(ProgramParser.BeginContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ProgramParser#rule}.
 	 * @param ctx the parse tree
 	 */
@@ -30,6 +60,26 @@ public interface ProgramListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitRule(ProgramParser.RuleContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ProgramParser#init}.
+	 * @param ctx the parse tree
+	 */
+	void enterInit(ProgramParser.InitContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ProgramParser#init}.
+	 * @param ctx the parse tree
+	 */
+	void exitInit(ProgramParser.InitContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ProgramParser#synVar}.
+	 * @param ctx the parse tree
+	 */
+	void enterSynVar(ProgramParser.SynVarContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ProgramParser#synVar}.
+	 * @param ctx the parse tree
+	 */
+	void exitSynVar(ProgramParser.SynVarContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProgramParser#nameRule}.
 	 * @param ctx the parse tree
@@ -41,27 +91,15 @@ public interface ProgramListener extends ParseTreeListener {
 	 */
 	void exitNameRule(ProgramParser.NameRuleContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code sequence}
-	 * labeled alternative in {@link ProgramParser#description}.
+	 * Enter a parse tree produced by {@link ProgramParser#description}.
 	 * @param ctx the parse tree
 	 */
-	void enterSequence(ProgramParser.SequenceContext ctx);
+	void enterDescription(ProgramParser.DescriptionContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code sequence}
-	 * labeled alternative in {@link ProgramParser#description}.
+	 * Exit a parse tree produced by {@link ProgramParser#description}.
 	 * @param ctx the parse tree
 	 */
-	void exitSequence(ProgramParser.SequenceContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ProgramParser#alternative}.
-	 * @param ctx the parse tree
-	 */
-	void enterAlternative(ProgramParser.AlternativeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ProgramParser#alternative}.
-	 * @param ctx the parse tree
-	 */
-	void exitAlternative(ProgramParser.AlternativeContext ctx);
+	void exitDescription(ProgramParser.DescriptionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProgramParser#nameID}.
 	 * @param ctx the parse tree
@@ -73,29 +111,15 @@ public interface ProgramListener extends ParseTreeListener {
 	 */
 	void exitNameID(ProgramParser.NameIDContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code oneSymbol}
-	 * labeled alternative in {@link ProgramParser#descriptionID}.
+	 * Enter a parse tree produced by {@link ProgramParser#descriptionID}.
 	 * @param ctx the parse tree
 	 */
-	void enterOneSymbol(ProgramParser.OneSymbolContext ctx);
+	void enterDescriptionID(ProgramParser.DescriptionIDContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code oneSymbol}
-	 * labeled alternative in {@link ProgramParser#descriptionID}.
+	 * Exit a parse tree produced by {@link ProgramParser#descriptionID}.
 	 * @param ctx the parse tree
 	 */
-	void exitOneSymbol(ProgramParser.OneSymbolContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code interval}
-	 * labeled alternative in {@link ProgramParser#descriptionID}.
-	 * @param ctx the parse tree
-	 */
-	void enterInterval(ProgramParser.IntervalContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code interval}
-	 * labeled alternative in {@link ProgramParser#descriptionID}.
-	 * @param ctx the parse tree
-	 */
-	void exitInterval(ProgramParser.IntervalContext ctx);
+	void exitDescriptionID(ProgramParser.DescriptionIDContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ProgramParser#symbol}.
 	 * @param ctx the parse tree

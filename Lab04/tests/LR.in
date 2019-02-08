@@ -1,0 +1,4 @@
+start = a;
+a : a b;
+b : B;
+B : 'B';

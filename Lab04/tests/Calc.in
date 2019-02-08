@@ -1,0 +1,20 @@
+start=a;
+a : e {System.out.println($0.res);};
+e returns <int res> : t e_ <$0.res> {$e.res = $1.res;};
+e_ <int acc> returns <int res> : @init {int r = 0;} Plus t {r = $1.res + $e_.acc;} e_ <r> {$e_.res = $2.res;}
+|Minus t {r = $e_.acc - $1.res;} e_ <r> {$e_.res = $2.res;}
+|EPS {$e_.res = $e_.acc;};
+t returns <int res> : f t_ <$0.res> {$t.res = $1.res;};
+t_ <int acc> returns <int res> : @init {int r = 0;} Mul f {r = $1.res * $t_.acc;} t_<r> {$t_.res = $2.res;}
+|EPS {$t_.res = $t_.acc;};
+f returns <int res> : p n <$0.res> {$f.res = $1.res;};
+n <int acc> returns <int res> : Pow f {$n.res = (int) Math.pow($n.acc, $1.res);}
+| EPS {$n.res = $n.acc;};
+p returns <int res> : Number {$p.res = Integer.parseInt($0);}
+| LParen e RParen {$p.res = $1.res;}
+| Min Number {$p.res = - Integer.parseInt($1);};
+Plus : '\\+';
+Minus : '\\-';
+Mul : '\\*';
+Pow : '\\^';
+Number : '[0-9]+';

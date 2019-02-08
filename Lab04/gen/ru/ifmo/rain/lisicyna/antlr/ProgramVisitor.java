@@ -20,11 +20,41 @@ public interface ProgramVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram(ProgramParser.ProgramContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ProgramParser#header}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitHeader(ProgramParser.HeaderContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProgramParser#members}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMembers(ProgramParser.MembersContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProgramParser#begin}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBegin(ProgramParser.BeginContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ProgramParser#rule}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitRule(ProgramParser.RuleContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProgramParser#init}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInit(ProgramParser.InitContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ProgramParser#synVar}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSynVar(ProgramParser.SynVarContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProgramParser#nameRule}.
 	 * @param ctx the parse tree
@@ -32,18 +62,11 @@ public interface ProgramVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNameRule(ProgramParser.NameRuleContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code sequence}
-	 * labeled alternative in {@link ProgramParser#description}.
+	 * Visit a parse tree produced by {@link ProgramParser#description}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSequence(ProgramParser.SequenceContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ProgramParser#alternative}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAlternative(ProgramParser.AlternativeContext ctx);
+	T visitDescription(ProgramParser.DescriptionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProgramParser#nameID}.
 	 * @param ctx the parse tree
@@ -51,19 +74,11 @@ public interface ProgramVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNameID(ProgramParser.NameIDContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code oneSymbol}
-	 * labeled alternative in {@link ProgramParser#descriptionID}.
+	 * Visit a parse tree produced by {@link ProgramParser#descriptionID}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOneSymbol(ProgramParser.OneSymbolContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code interval}
-	 * labeled alternative in {@link ProgramParser#descriptionID}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInterval(ProgramParser.IntervalContext ctx);
+	T visitDescriptionID(ProgramParser.DescriptionIDContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ProgramParser#symbol}.
 	 * @param ctx the parse tree

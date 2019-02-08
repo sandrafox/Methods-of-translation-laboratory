@@ -1,0 +1,7 @@
+start = a;
+a : D b
+| D c;
+b : D;
+c : E;
+D : 'D';
+E : 'E';

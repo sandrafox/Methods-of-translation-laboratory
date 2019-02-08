@@ -5,10 +5,13 @@ import java.util.*;
 }
 
 @parser::members {
-class Node {
-    String name;
-    List<List<String>> seqs = new ArrayList<>();
-    boolean isTerminal;
+public class Node {
+    public String name;
+    public List<List<Map.Entry<String, Map.Entry<String, String>>>> seqs = new ArrayList<>();
+    public boolean isTerminal;
+    public String inhVars;
+    public String synVars;
+    public String initCode;
 
     public Node(String name) {
         this.name = name;
@@ -20,77 +23,100 @@ Map<String, Node> nodes = new HashMap<>();
 Map<String, String> literals = new HashMap<>();
 }
 
-program : 'grammar' NameChar+ ';' '\n' rule+;
+program : begin header? members? rule+;
+
+header returns [String s]
+       : '@header' Code '@header' NL {$s = $Code.getText();};
+
+members returns [String s]
+        @init {
+        $s = "";
+        }
+        : '@members' NL (a = AllCode {$s +=$a.getText();}) NL '@members' NL;
+
+begin :  'start' '=' nameRule ';' NL;
 
 rule returns [Node node]
-     : nameRule ':' description {
-     Node node = new Node($nameRule.s);
-     node.isTerminal = false;
-     node.seqs.add($description.s);}
-     ('\n' '|' description {node.seqs.add($description.s);})* ';\n'
+     @init {
+     String s = null, s1 = null;
+     }
+     : nameRule Var? (synVar {s = $synVar.s;})? ':' (init {s1 = $init.s;})? description {
+     $node = new Node($nameRule.s);
+     $node.isTerminal = false;
+     if ($Var != null) $node.inhVars = $Var.getText();
+     $node.synVars = s;
+     $node.initCode = s1;
+     $node.seqs.add($description.s);}
+     (NL '|' description {$node.seqs.add($description.s);})* ';' NL
      | nameID ':' descriptionID {
-      Node node = new Node($nameID.s);
-      node.isTerminal = true;
-      node.seqs.add($descritptionID.s);}
-      ('\n' '|' descriptionID {node.seqs.add($description.s);})* ';\n';
+      $node = new Node($nameID.s);
+      $node.isTerminal = true;
+      $node.seqs.add($descriptionID.s);}
+      (NL '|' descriptionID {$node.seqs.add($descriptionID.s);})* ';'NL;
+
+init returns [String s]
+     : '@init' Code {$s = $Code.getText();};
+
+synVar returns [String s]
+       : 'returns' Var {$s = $Var.getText();};
 
 nameRule returns [String s]
-         : NameRuleStart {$s = $NameRuleStart.getText();} (NameChar {$s += $NameChar.getText();})*;
+         : NameRule {$s = $NameRule.getText();};
 
-description returns [List<String> s]
+description returns [List<Map.Entry<String, Map.Entry<String, String>>> s]
             @init {
                 $s = new ArrayList<>();
             }
-            : ((nameID {$s.add($nameID.s);}
-              | symbol {
-              if (literals.containsKey($symbol.s)) {
-                  $s.add(literals.get($symbol.s));
-              } else {
-                  Node node = new Node("T_" + literals.keySet().size());
-                  node.isTerminal = true;
-                  List<String> temp = new ArrayList<>();
-                  temp.add($symbol.s);
-                  node.seqs.add(temp);
-                  literals.put($symbol.s, node.name);
-                  nodes.put(node.name, node);
-              }
-              }
-              | nameRule{$s.add($nameRule.s);}) ('+' {$s.get(s.size() - 1) += "+";} | '*' {$s.get(s.size() - 1) += "*";}| '?' {$s.get(s.size() - 1) += "?";})?)+;
+            : (nameRule Var?  Code?{
+              String s = null;
+              if ($Code != null) s = $Code.getText();
+              String s1 = null;
+              if ($Var != null) s1 = $Var.getText();
+              $s.add(new AbstractMap.SimpleEntry<>($nameRule.s, new AbstractMap.SimpleEntry<>(s, s1)));}
+              | nameID Code? {
+              String s = null;
+              if ($Code != null) s = $Code.getText();
+              $s.add(new AbstractMap.SimpleEntry<>($nameID.s, new AbstractMap.SimpleEntry<>(s, null)));})+;
 
 nameID returns [String s]
-       : NameIDStart NameChar* {$s = $NameIDStart.getText();};
+       : NameID{$s = $NameID.getText();};
 
-descriptionID returns [List<String> s]
+descriptionID returns [List<Map.Entry<String, Map.Entry<String, String>>> s]
               @init {
-              s = new ArrayList<>();
+              $s = new ArrayList<>();
               }
-              : a=symbol   {
-              $s.add($a.s);
-              }
-              | '\'' b=Symbol '\'' '..' '\'' c=Symbol '\''
-              {$s.add("'" + $b.getText() + "'..'" + $c.getText() + "'");};
+              : Regex {
+              $s.add(new AbstractMap.SimpleEntry<>($Regex.getText(), null));
+              };
 
 symbol returns [String s]
-       : '\'' String '\'' {$s = $String.getText();};
+       :  String   {$s = $String.getText();};
 
-String : Symbol+;
+Regex : '\'' (~('\''|'\r' | '\n') | '\\\'')* '\'';
+AllCode : '#' (~[#]+)* '#';
 
-NameChar : NameRuleStart
-         | NameIDStart
-         | '0'..'9'
-         | '_';
+Start : 'start';
 
-NameRuleStart : 'a'..'z';
+NameRule : [a-z][a-zA-Z0-9_]*;
 
-NameIDStart : 'A'..'Z';
+NameID : [A-Z][a-zA-Z0-9_]*;
 
-Symbol : '\u0021'..'\u007E'
-       | WhiteSpace;
 
-WhiteSpace : ' '
-           | '\n'
-           | '\b'
-           | '\r'
-           | '\t';
+String :  '"'(~('"') | '\\"')*'"' ;
+
+Code : '{' (~[{}])* '}';
+
+Var : '<' (~[<>])* '>';
+
+
+
+//WhiteSpace : ' '
+  //         | '\n'
+    //       | '\b'
+      //     | '\r'
+        //   | '\t';
+
+NL : '\r'? '\n';
 
 WS : [ \t\r\n]+ -> skip;
+

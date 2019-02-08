@@ -1,0 +1,32 @@
+start = a;
+@header {
+import java.util.concurrent.*;
+} @header
+@members
+#
+Map<String, String> value;
+
+String build(String s1, String s2) {
+    String s = "";
+    int i;
+    for (i = 0; i < Math.min(s1.length(), s2.length()); i++) {
+        s += s1.charAt(i);
+        s += s2.charAt(i);
+    }
+    for (int j = i; j < s1.length(); j++)
+        s += s1.charAt(j);
+    for (int j = i; j < s2.length(); j++)
+        s += s2.charAt(j);
+    return s;
+}
+#
+@members
+a :@init {System.out.println("Result:");}
+ b {System.out.println($0.s);};
+b returns <String s>
+  : c <0> D c<1> {$b.s = build($0.s, $2.s);};
+c <int i> returns <String s>
+  : C {$c.s = $0 + $c.i;};
+C : 'abc'
+| 'cda';
+D : '\\+\\+';
